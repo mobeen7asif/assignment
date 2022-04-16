@@ -1,26 +1,35 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <AddActivity />
+  <ActivityList />
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import ActivityList from './components/ActivityList.vue'
+import AddActivity from './components/AddActivity.vue'
+import './assets/styles/main.css'
+import { onMounted } from '@vue/runtime-core'
+import { useActivityStore } from '@/stores/activity'
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    ActivityList,
+    AddActivity
+  },
+  setup() {
+    const activity = useActivityStore()
+    onMounted(() => {
+      if (!localStorage.getItem('activities')) {
+        localStorage.setItem('activities', []);
+      }
+      else {
+        activity.setActivities(JSON.parse(localStorage.getItem('activities')));
+      }
+    })
+    return { activity }
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
